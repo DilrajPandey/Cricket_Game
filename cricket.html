@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cricket Game</title>
+    <link rel="stylesheet" href="cricket.css">
+</head> 
+<body>
+    <h1>Bat Ball Stump Game</h1>
+    <button class="choise-button" onclick="
+    
+       let compchoise = cricketFunc();
+       let result = resultSec('Bat',compchoise);
+       call('Bat',compchoise, result);
+        "
+        
+    > <img src="bat.png" alt="Bat image" class="choise-image"> <!-- bat image inplace of bat text -->
+    </button>
+    <button class="choise-button" onclick="
+        compchoise = cricketFunc();
+        result = resultSec('Ball',compchoise);
+        call('Ball',compchoise, result);
+        "
+        ><img src="ball.png" alt="Ball image" class="choise-image"> <!-- ball image inplace of bat text -->
+    </button>
+    <button class="choise-button" onclick="
+        compchoise = cricketFunc();
+        result = resultSec('Stump',compchoise);
+        call('Stump',compchoise, result);
+        "
+        ><img src="stump.png" alt="Stump image" class="choise-image"> <!-- stump image inplace of bat text -->
+    </button>
+
+    <h3 id="yourmove"></h3>
+    <h3 id="compmove"></h3>
+    <h3 id="resultt"></h3>
+    <h3 id="scoree"></h3>
+
+    <button onclick="localStorage.clear()
+        resetScore(); //no parameter passed so that it start from 0
+    ">Reset</button>
+
+<script>
+
+    let scoreStr = localStorage.getItem('score'); //score ko scoreStr me store kr lia simplification k lia
+    let score;
+    resetScore(scoreStr);
+    
+    function resetScore(scoreStr){
+        score = scoreStr ? JSON.parse(scoreStr) : {
+            won: 0,
+            lost: 0,
+            tie: 0,
+        }; //if scoreStr is undefined then it will choose the falsy option otherwise the parse one will be selected
+
+        score.displayScore = function(){
+            return `Won: ${score.won}, Lost: ${score.lost}, Tie: ${score.tie}`;
+        };
+
+        call(); //to display the reset value
+    }
+
+
+//ANOTHER WAY OF DOING THIS
+    // let score;
+    // if(scoreStr !== undefined){ //if score is already defined i.e. atleast one game has been played
+    //     score = JSON.parse(scoreStr); //then, put the score value to where it has ended last time
+    // }else{     //else start from 0
+    //     score = {
+    //         won: 0,
+    //         lost: 0,
+    //         tie: 0,
+    //     }
+    // }
+    
+
+    //makes a function here
+    function cricketFunc(){
+    
+        let randnum = Math.random() * 3;
+        if(randnum <=1 ){
+            return 'Bat';
+            
+        }else if(randnum <=2 ){
+            return 'Ball';
+            
+        }else{
+            return 'Stump';
+        }    
+    }
+    function resultSec(yourCh,compMove){
+        if(yourCh === 'Bat'){
+            if(compMove === 'Bat'){
+                score.tie++;
+                return 'Match tied';
+            }else if(compMove === 'Ball'){
+                score.won++;
+                return 'You Won';
+            }else{
+                score.lost++;
+                return 'You Loose';
+            }
+        }else if(yourCh==='Ball'){
+            if(compMove === 'Bat'){
+                score.lost++;
+                return 'You Loose';
+            }else if(compMove === 'Ball'){
+                score.tie++;
+                return 'Match tied';
+            }else{
+                score.won++;
+                return 'You Won';
+            }
+        }else if(yourCh==='Stump'){
+            if(compMove === 'Stump'){
+                score.tie++;
+                return 'Match tied';
+            }else if(compMove === 'Ball'){
+                score.lost++;
+                return 'You Loose';
+            }else{
+                score.won++;
+                return 'You Won';
+            }
+        }
+    }
+    function call(yourCh, compchoise,result){
+        // console.log(score);
+        localStorage.setItem('score', JSON.stringify(score)); //result ready hote hi storage me update hoga 
+
+        document.querySelector('#yourmove').innerText = yourCh ? `You have choosen ${yourCh}` : ''; //here ternery operator is being used | to display in the page 
+
+        document.querySelector('#compmove').innerText = compchoise ? `Computer has choosen ${compchoise}.` : ''; //here ternery operator is being used | to display in the page 
+
+        document.querySelector('#resultt').innerText = result || ''; //if result have some value then it will be selected otherwise the or option(empty string) will be selected | to display in the page 
+
+        document.querySelector('#scoree').innerText = score.displayScore(); //to display the score in the page
+        
+        
+    }
+</script>
+</body>
+</html>
